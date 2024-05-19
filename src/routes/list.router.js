@@ -1,12 +1,16 @@
 import express from "express";
 import multer from "multer";
-import { addUsersFromCSV, createList } from "../controllers/list.controller.js";
+import {
+    addUsersFromCSV,
+    createList,
+    getAllLists,
+} from "../controllers/list.controller.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = express.Router();
 
-const upload = multer({ dest: "uploads/" });
-
 router.post("/", createList);
-router.post("/:listId/users", upload.single("file"), addUsersFromCSV);
+router.post("/:listId/users", upload.single("UsersFile"), addUsersFromCSV);
+router.get("/getall", getAllLists);
 
 export default router;

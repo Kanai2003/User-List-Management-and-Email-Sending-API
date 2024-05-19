@@ -12,7 +12,9 @@ export const createList = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid list data");
     }
     await list.save();
-    res.status(201).json(new ApiResponse({ message: "List created", list }));
+    res.status(201).json(
+        new ApiResponse(200, { list }, "List created successfully"),
+    );
 });
 
 export const addUsersFromCSV = asyncHandler(async (req, res) => {
@@ -23,7 +25,7 @@ export const addUsersFromCSV = asyncHandler(async (req, res) => {
         throw new ApiError(404, "List not found");
     }
 
-    const csvData = await parseCSV(req.file.buffer.toString());
+    const csvData = await parseCSV(req.file.path);
     let successCount = 0;
     let failureCount = 0;
     const errors = [];
@@ -38,7 +40,7 @@ export const addUsersFromCSV = asyncHandler(async (req, res) => {
 
             list.customProperties.forEach((prop) => {
                 if (!user.properties.has(prop.title)) {
-                    user.properties.set(prop.title, prop.defaultValue);
+                    user.properties.set(prop.title, prop.fallbackValue);
                 }
             });
 
@@ -53,12 +55,23 @@ export const addUsersFromCSV = asyncHandler(async (req, res) => {
 
     await list.save();
     return res.status(201).json(
-        new ApiResponse({
-            message: "Users added",
-            successCount,
-            failureCount,
-            errors,
-            totalCount: list.users.length,
-        }),
+        new ApiResponse(
+            200,
+            {
+                message: "Users added successfully!",
+                successCount,
+                failureCount,
+                errors,
+                totalCount: list.users.length,
+            },
+            "Users added successfully!",
+        ),
+    );
+});
+
+export const getAllLists = asyncHandler(async (req, res) => {
+    const users = await List.find();
+    res.status(200).json(
+        new ApiResponse(200, users, "All lists fetched successfully"),
     );
 });

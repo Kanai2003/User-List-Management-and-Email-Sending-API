@@ -18,7 +18,13 @@ import listRouter from "./routes/list.router.js";
 import userRouter from "./routes/user.router.js";
 
 // routes declaration
-app.use('/list', listRouter);
-app.use('/user', userRouter);
+app.use("/list", listRouter);
+app.use("/user", userRouter);
+
+app.use("/", (req, res) => {
+    return res.json({
+        message: "Welcome to the API",
+    });
+});
 
 export { app };

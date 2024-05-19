@@ -5,7 +5,7 @@ const listSchema = new mongoose.Schema({
     customProperties: [
         {
             title: { type: String, required: true },
-            defaultValue: { type: String, required: true },
+            fallbackValue: { type: String, required: true },
         },
     ],
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
